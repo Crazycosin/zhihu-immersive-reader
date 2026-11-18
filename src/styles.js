@@ -274,6 +274,22 @@ const STYLE_CSS = `
     #immersive-wrapper .Comments-container .CommentContent a :where(div, span) { color: var(--zh-accent) !important; }
     #immersive-wrapper .Comments-container .InputLike,
     #immersive-wrapper .Comments-container [contenteditable="true"] { color: var(--zh-text) !important; background-color: var(--zh-quote) !important; border-color: var(--zh-border) !important; }
+    /* 沉浸模式下知乎原生弹窗（评论 Modal 等）套用沉浸主题卡片风格。
+       弹窗挂在 body 下、在 #immersive-wrapper 之外，用 :has 限定作用域，
+       退出沉浸模式后原生页面外观不受影响。 */
+    body:has(#immersive-wrapper) .Modal-wrapper .Modal-backdrop { background-color: rgba(0, 0, 0, 0.4) !important; }
+    body:has(#immersive-wrapper) .Modal-wrapper .Modal-modal { background-color: var(--zh-paper) !important; color: var(--zh-text) !important; border: 1px solid var(--zh-border) !important; border-radius: 8px !important; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25) !important; }
+    body:has(#immersive-wrapper) .Modal-wrapper .Modal-title { color: var(--zh-title) !important; }
+    body:has(#immersive-wrapper) .Modal-wrapper .Modal-closeButton { color: var(--zh-meta) !important; }
+    body:has(#immersive-wrapper) .Modal-wrapper .Modal-closeButton:hover { background-color: var(--zh-quote) !important; }
+    body:has(#immersive-wrapper) .Modal-wrapper .Comments-container { color: var(--zh-text) !important; background-color: var(--zh-paper) !important; border-color: var(--zh-border) !important; }
+    body:has(#immersive-wrapper) .Modal-wrapper .Comments-container [data-id] { color: var(--zh-text) !important; background-color: transparent !important; border-color: var(--zh-border) !important; }
+    body:has(#immersive-wrapper) .Modal-wrapper .Comments-container :where(div, p, span, li, h1, h2, h3, h4, button) { color: var(--zh-text) !important; }
+    body:has(#immersive-wrapper) .Modal-wrapper .Comments-container a,
+    body:has(#immersive-wrapper) .Modal-wrapper .Comments-container a :where(div, span) { color: var(--zh-accent) !important; }
+    body:has(#immersive-wrapper) .Modal-wrapper .Comments-container .InputLike,
+    body:has(#immersive-wrapper) .Modal-wrapper .Comments-container [contenteditable="true"] { color: var(--zh-text) !important; background-color: var(--zh-quote) !important; border-color: var(--zh-border) !important; }
+    body:has(#immersive-wrapper) .Modal-wrapper .Comments-container img { background-color: transparent !important; }
     #immersive-wrapper .zh-space-hidden { display: none !important; }
     /* Action bar 按钮 */
     .zh-api-action-bar { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; align-items: center !important; margin-top: 20px !important; padding-top: 14px !important; border-top: 1px dashed var(--zh-border) !important; }
@@ -283,6 +299,29 @@ const STYLE_CSS = `
     .zh-action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .zh-action-vote-up.is-active { background: #0066ff; border-color: #0066ff; color: #fff; }
     .zh-action-vote-down.is-active { background: #f56c6c; border-color: #f56c6c; color: #fff; }
+    /* 内联评论区：评论按钮原地展开，替代跳转原页 */
+    .zh-inline-comments { margin-top: 14px; padding: 14px 16px; border: 1px solid var(--zh-border); border-radius: 6px; background: var(--zh-paper); }
+    .zh-inline-comments-head { font-weight: bold; font-size: 14px; color: var(--zh-text); margin-bottom: 10px; }
+    .zh-inline-comments-body { max-height: 420px; overflow-y: auto; }
+    .zh-comments-loading, .zh-comments-empty, .zh-comments-error { font-size: 13px; color: var(--zh-text); opacity: .7; padding: 8px 0; }
+    .zh-comments-error { color: #c0392b; opacity: 1; }
+    .zh-comments-list { display: flex; flex-direction: column; gap: 12px; }
+    .zh-comment-item { border-bottom: 1px dashed var(--zh-border); padding-bottom: 12px; }
+    .zh-comments-list > .zh-comment-item:last-child { border-bottom: 0; padding-bottom: 0; }
+    .zh-comment-main { display: flex; gap: 10px; }
+    .zh-comment-avatar { width: 28px !important; height: 28px !important; min-width: 28px !important; min-height: 28px !important; max-width: 28px !important; max-height: 28px !important; border-radius: 4px !important; object-fit: cover !important; box-shadow: none !important; margin: 0 !important; flex: 0 0 28px !important; }
+    .zh-comment-body { flex: 1; min-width: 0; font-size: 13.5px; color: var(--zh-text); }
+    .zh-comment-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
+    .zh-comment-author { font-weight: bold; }
+    .zh-comment-time { font-size: 12px; opacity: .6; }
+    .zh-comment-content { line-height: 1.6; word-break: break-word; }
+    .zh-comment-content img { max-width: 100%; vertical-align: text-bottom; }
+    .zh-comment-content a { color: var(--zh-accent); }
+    .zh-comment-likes { display: inline-block; margin-top: 6px; font-size: 12px; opacity: .7; }
+    .zh-comment-replies { margin-top: 10px; margin-left: 38px; padding-left: 12px; border-left: 2px solid var(--zh-border); display: flex; flex-direction: column; gap: 10px; }
+    .zh-comment-replies .zh-comment-item { border-bottom: 0; padding-bottom: 0; }
+    .zh-comment-more-btn, .zh-comments-more-btn { margin-top: 8px; padding: 5px 12px; border: 1px solid var(--zh-border); border-radius: 4px; background: transparent; color: var(--zh-accent); cursor: pointer; font-family: inherit; font-size: 13px; }
+    .zh-comment-more-btn:hover, .zh-comments-more-btn:hover { border-color: var(--zh-accent); }
     #immersive-wrapper .pc-article-answer-text-chain, #immersive-wrapper .pc-article-answer-big-img, #immersive-wrapper .ecommerce-ad-box, #immersive-wrapper .MCNLinkCard, #immersive-wrapper .RichText-MCNLinkCardContainer { display: none !important; }
     
     @keyframes zh-spin { 100% { transform: rotate(360deg); } }

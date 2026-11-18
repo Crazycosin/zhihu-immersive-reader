@@ -519,6 +519,22 @@ const STYLE_CSS = `
     #immersive-wrapper .Comments-container .CommentContent a :where(div, span) { color: var(--zh-accent) !important; }
     #immersive-wrapper .Comments-container .InputLike,
     #immersive-wrapper .Comments-container [contenteditable="true"] { color: var(--zh-text) !important; background-color: var(--zh-quote) !important; border-color: var(--zh-border) !important; }
+    /* 沉浸模式下知乎原生弹窗（评论 Modal 等）套用沉浸主题卡片风格。
+       弹窗挂在 body 下、在 #immersive-wrapper 之外，用 :has 限定作用域，
+       退出沉浸模式后原生页面外观不受影响。 */
+    body:has(#immersive-wrapper) .Modal-wrapper .Modal-backdrop { background-color: rgba(0, 0, 0, 0.4) !important; }
+    body:has(#immersive-wrapper) .Modal-wrapper .Modal-modal { background-color: var(--zh-paper) !important; color: var(--zh-text) !important; border: 1px solid var(--zh-border) !important; border-radius: 8px !important; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25) !important; }
+    body:has(#immersive-wrapper) .Modal-wrapper .Modal-title { color: var(--zh-title) !important; }
+    body:has(#immersive-wrapper) .Modal-wrapper .Modal-closeButton { color: var(--zh-meta) !important; }
+    body:has(#immersive-wrapper) .Modal-wrapper .Modal-closeButton:hover { background-color: var(--zh-quote) !important; }
+    body:has(#immersive-wrapper) .Modal-wrapper .Comments-container { color: var(--zh-text) !important; background-color: var(--zh-paper) !important; border-color: var(--zh-border) !important; }
+    body:has(#immersive-wrapper) .Modal-wrapper .Comments-container [data-id] { color: var(--zh-text) !important; background-color: transparent !important; border-color: var(--zh-border) !important; }
+    body:has(#immersive-wrapper) .Modal-wrapper .Comments-container :where(div, p, span, li, h1, h2, h3, h4, button) { color: var(--zh-text) !important; }
+    body:has(#immersive-wrapper) .Modal-wrapper .Comments-container a,
+    body:has(#immersive-wrapper) .Modal-wrapper .Comments-container a :where(div, span) { color: var(--zh-accent) !important; }
+    body:has(#immersive-wrapper) .Modal-wrapper .Comments-container .InputLike,
+    body:has(#immersive-wrapper) .Modal-wrapper .Comments-container [contenteditable="true"] { color: var(--zh-text) !important; background-color: var(--zh-quote) !important; border-color: var(--zh-border) !important; }
+    body:has(#immersive-wrapper) .Modal-wrapper .Comments-container img { background-color: transparent !important; }
     #immersive-wrapper .zh-space-hidden { display: none !important; }
     /* Action bar 按钮 */
     .zh-api-action-bar { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; align-items: center !important; margin-top: 20px !important; padding-top: 14px !important; border-top: 1px dashed var(--zh-border) !important; }
@@ -528,6 +544,29 @@ const STYLE_CSS = `
     .zh-action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .zh-action-vote-up.is-active { background: #0066ff; border-color: #0066ff; color: #fff; }
     .zh-action-vote-down.is-active { background: #f56c6c; border-color: #f56c6c; color: #fff; }
+    /* 内联评论区：评论按钮原地展开，替代跳转原页 */
+    .zh-inline-comments { margin-top: 14px; padding: 14px 16px; border: 1px solid var(--zh-border); border-radius: 6px; background: var(--zh-paper); }
+    .zh-inline-comments-head { font-weight: bold; font-size: 14px; color: var(--zh-text); margin-bottom: 10px; }
+    .zh-inline-comments-body { max-height: 420px; overflow-y: auto; }
+    .zh-comments-loading, .zh-comments-empty, .zh-comments-error { font-size: 13px; color: var(--zh-text); opacity: .7; padding: 8px 0; }
+    .zh-comments-error { color: #c0392b; opacity: 1; }
+    .zh-comments-list { display: flex; flex-direction: column; gap: 12px; }
+    .zh-comment-item { border-bottom: 1px dashed var(--zh-border); padding-bottom: 12px; }
+    .zh-comments-list > .zh-comment-item:last-child { border-bottom: 0; padding-bottom: 0; }
+    .zh-comment-main { display: flex; gap: 10px; }
+    .zh-comment-avatar { width: 28px !important; height: 28px !important; min-width: 28px !important; min-height: 28px !important; max-width: 28px !important; max-height: 28px !important; border-radius: 4px !important; object-fit: cover !important; box-shadow: none !important; margin: 0 !important; flex: 0 0 28px !important; }
+    .zh-comment-body { flex: 1; min-width: 0; font-size: 13.5px; color: var(--zh-text); }
+    .zh-comment-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
+    .zh-comment-author { font-weight: bold; }
+    .zh-comment-time { font-size: 12px; opacity: .6; }
+    .zh-comment-content { line-height: 1.6; word-break: break-word; }
+    .zh-comment-content img { max-width: 100%; vertical-align: text-bottom; }
+    .zh-comment-content a { color: var(--zh-accent); }
+    .zh-comment-likes { display: inline-block; margin-top: 6px; font-size: 12px; opacity: .7; }
+    .zh-comment-replies { margin-top: 10px; margin-left: 38px; padding-left: 12px; border-left: 2px solid var(--zh-border); display: flex; flex-direction: column; gap: 10px; }
+    .zh-comment-replies .zh-comment-item { border-bottom: 0; padding-bottom: 0; }
+    .zh-comment-more-btn, .zh-comments-more-btn { margin-top: 8px; padding: 5px 12px; border: 1px solid var(--zh-border); border-radius: 4px; background: transparent; color: var(--zh-accent); cursor: pointer; font-family: inherit; font-size: 13px; }
+    .zh-comment-more-btn:hover, .zh-comments-more-btn:hover { border-color: var(--zh-accent); }
     #immersive-wrapper .pc-article-answer-text-chain, #immersive-wrapper .pc-article-answer-big-img, #immersive-wrapper .ecommerce-ad-box, #immersive-wrapper .MCNLinkCard, #immersive-wrapper .RichText-MCNLinkCardContainer { display: none !important; }
     
     @keyframes zh-spin { 100% { transform: rotate(360deg); } }
@@ -2755,11 +2794,13 @@ const HELP_MODAL_HTML = `
             </button>`;
         }
 
-        if (record.comment_count != null) {
-            html += `<a class="zh-action-btn zh-action-comment" href="${escapeHTML(record.url || '#')}" target="_blank" rel="noopener noreferrer" title="查看评论">
+        // 评论按钮不再跳转原页：原地展开内联评论区（见 toggleInlineComments）。
+        // 没有 apiTargetId（拿不到评论 API id）时仍退回新标签页打开原文。
+        if (record.comment_count != null || record.apiTargetId) {
+            html += `<button class="zh-action-btn zh-action-comment" data-action="comment" title="展开评论">
                 <span style="display:inline-flex;align-items:center">${ACTION_ICONS.comment}</span>
                 ${record.comment_count > 0 ? record.comment_count + ' 评论' : '评论'}
-            </a>`;
+            </button>`;
         }
 
         html += `<button class="zh-action-btn zh-action-collect${record.collected ? ' is-active' : ''}" data-action="collect" title="收藏">
@@ -2788,7 +2829,16 @@ const HELP_MODAL_HTML = `
     }
 
     function bindActionBar(bar, record) {
-        bar.querySelectorAll('[data-action]').forEach(btn => {
+        // 评论按钮是纯 UI 切换（展开/收起内联评论区），不参与写操作节流与刷新流程。
+        const commentBtn = bar.querySelector('[data-action="comment"]');
+        if (commentBtn) {
+            commentBtn.addEventListener('click', e => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleInlineComments(bar, record);
+            });
+        }
+        bar.querySelectorAll('[data-action]:not([data-action="comment"])').forEach(btn => {
             btn.addEventListener('click', async (e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -2896,6 +2946,230 @@ const HELP_MODAL_HTML = `
         const newBar = buildActionBar(record);
         bar.innerHTML = newBar.innerHTML;
         bindActionBar(bar, record);
+    }
+
+    // ─── 内联评论区 ─────────────────────────────────────────────────────
+    // 评论按钮原来是个 <a target="_blank">，点击会跳转/新开原页，原生页的评论区
+    // 在沉浸视图里又不可见。这里改为点击后原地展开评论区：
+    //   GET /api/v4/answers/{id}/root_comments（回答）/ articles/{id}/root_comments（文章）
+    //   与 feeds API 同一权限模型：登录 cookie 即可，无需 x-zse-96 签名。
+    // 只读展示（正文、作者、时间、点赞数、楼中楼回复），不发评论写接口。
+
+    function buildZhihuCommentsUrl(targetType, targetId, nextUrl) {
+        if (nextUrl) {
+            try { return new URL(nextUrl, location.origin).href; } catch (err) { return nextUrl; }
+        }
+        const path = targetType === 'article'
+            ? `/api/v4/articles/${targetId}/root_comments`
+            : `/api/v4/answers/${targetId}/root_comments`;
+        return buildZhihuActionUrl(path, { limit: 20, offset: 0, order: 'normal', status: 'open' });
+    }
+
+    function formatCommentTime(ts) {
+        const time = Number(ts) * 1000;
+        if (!Number.isFinite(time) || time <= 0) return '';
+        const diff = Date.now() - time;
+        if (diff < 60 * 1000) return '刚刚';
+        if (diff < 60 * 60 * 1000) return `${Math.floor(diff / 60000)} 分钟前`;
+        if (diff < 24 * 60 * 60 * 1000) return `${Math.floor(diff / 3600000)} 小时前`;
+        if (diff < 7 * 24 * 60 * 60 * 1000) return `${Math.floor(diff / 86400000)} 天前`;
+        const d = new Date(time);
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    // 评论 content 是知乎返回的 HTML 片段：去脚本类节点、on* 属性与 javascript: 链接，
+    // 外链统一新标签页打开。
+    function sanitizeCommentHTML(html) {
+        const doc = new DOMParser().parseFromString(String(html || ''), 'text/html');
+        doc.querySelectorAll('script, style, iframe, object, embed, form, link').forEach(el => el.remove());
+        doc.querySelectorAll('*').forEach(el => {
+            Array.from(el.attributes).forEach(attr => {
+                const name = attr.name.toLowerCase();
+                if (name.startsWith('on')) el.removeAttribute(attr.name);
+                else if ((name === 'href' || name === 'src') && /^\s*javascript:/i.test(attr.value)) el.removeAttribute(attr.name);
+            });
+        });
+        doc.querySelectorAll('a').forEach(a => {
+            a.setAttribute('target', '_blank');
+            a.setAttribute('rel', 'noopener noreferrer nofollow');
+        });
+        return doc.body.innerHTML;
+    }
+
+    // 拉取楼中楼回复（分页）。
+    // 知乎 web「查看全部回复」实际走 comment_v5（注意单数 child_comment），order_by=ts 按时间排序；
+    // 旧的 /api/v4/comments/{id}/child_comments 已失效（返回空数据），仅作兜底。
+    // 返回 { items, next }，next 为 paging.next 下一页地址。
+    async function fetchZhihuChildCommentsPage(commentId, nextUrl) {
+        if (nextUrl) {
+            const url = new URL(nextUrl, location.origin).href;
+            const data = await gmFetchJSON(url);
+            return {
+                items: Array.isArray(data?.data) ? data.data : [],
+                next: (data?.paging && !data.paging.is_end && data.paging.next) || ''
+            };
+        }
+        try {
+            const url = buildZhihuActionUrl(`/api/v4/comment_v5/comment/${commentId}/child_comment`, { order_by: 'ts', limit: 20, offset: 0 });
+            const data = await gmFetchJSON(url);
+            const items = Array.isArray(data?.data) ? data.data : [];
+            if (items.length || data?.paging) {
+                return {
+                    items,
+                    next: (data?.paging && !data.paging.is_end && data.paging.next) || ''
+                };
+            }
+            throw new Error('V5_EMPTY');
+        } catch (err) {
+            const url = buildZhihuActionUrl(`/api/v4/comments/${commentId}/child_comments`, { limit: 20, offset: 0, order: 'asc', status: 'open' });
+            const data = await gmFetchJSON(url);
+            return {
+                items: Array.isArray(data?.data) ? data.data : [],
+                next: (data?.paging && !data.paging.is_end && data.paging.next) || ''
+            };
+        }
+    }
+
+    function renderZhihuCommentItem(comment) {
+        const member = comment?.author?.member || comment?.author || {};
+        const item = document.createElement('div');
+        item.className = 'zh-comment-item';
+        const avatarHTML = member.avatar_url
+            ? `<img class="zh-comment-avatar" src="${escapeHTML(member.avatar_url)}" alt="">`
+            : '';
+        const likeCount = Number(comment.like_count ?? comment.vote_count) || 0;
+        const likeHTML = likeCount > 0 ? `<span class="zh-comment-likes">♥ ${likeCount}</span>` : '';
+        item.innerHTML = `
+            <div class="zh-comment-main">
+                ${avatarHTML}
+                <div class="zh-comment-body">
+                    <div class="zh-comment-head">
+                        <span class="zh-comment-author">${escapeHTML(member.name || '匿名用户')}</span>
+                        <span class="zh-comment-time">${escapeHTML(formatCommentTime(comment.created_time))}</span>
+                    </div>
+                    <div class="zh-comment-content">${sanitizeCommentHTML(comment.content)}</div>
+                    ${likeHTML}
+                </div>
+            </div>`;
+
+        // 楼中楼：root_comments 内嵌 child_comments；超出内嵌数量时按需拉全量回复。
+        const childCount = Number(comment.child_comment_count) || 0;
+        const embedded = Array.isArray(comment.child_comments) ? comment.child_comments : [];
+        if (childCount > 0 || embedded.length) {
+            const replies = document.createElement('div');
+            replies.className = 'zh-comment-replies';
+            embedded.forEach(child => replies.appendChild(renderZhihuCommentItem(child)));
+            if (embedded.length < childCount && comment.id) {
+                const more = document.createElement('button');
+                more.className = 'zh-comment-more-btn';
+                more.textContent = `查看全部 ${childCount} 条回复`;
+                let nextUrl = '';
+                more.addEventListener('click', async () => {
+                    more.disabled = true;
+                    more.textContent = '正在加载回复...';
+                    try {
+                        const page = await fetchZhihuChildCommentsPage(comment.id, nextUrl);
+                        if (!page.items.length && !nextUrl) {
+                            more.textContent = '没有更多回复了';
+                            return;
+                        }
+                        // 首次加载替换内嵌的前几条，避免重复；后续分页直接追加。
+                        if (!nextUrl) replies.querySelectorAll('.zh-comment-item').forEach(el => el.remove());
+                        page.items.forEach(child => replies.appendChild(renderZhihuCommentItem(child)));
+                        if (page.next) {
+                            nextUrl = page.next;
+                            more.disabled = false;
+                            more.textContent = '查看更多回复';
+                        } else {
+                            more.remove();
+                        }
+                    } catch (err) {
+                        more.disabled = false;
+                        more.textContent = '回复加载失败，点击重试';
+                    }
+                });
+                replies.appendChild(more);
+            }
+            item.appendChild(replies);
+        }
+        return item;
+    }
+
+    async function loadInlineComments(panel, record, nextUrl = '') {
+        const body = panel.querySelector('.zh-inline-comments-body');
+        const targetType = record.apiTargetType === 'article' ? 'article' : 'answer';
+        try {
+            const url = buildZhihuCommentsUrl(targetType, record.apiTargetId, nextUrl);
+            const data = await gmFetchJSON(url);
+            panel.querySelector('.zh-comments-loading')?.remove();
+            panel.querySelector('.zh-comments-error')?.remove();
+            if (nextUrl) panel.querySelector('.zh-comments-more-btn')?.remove();
+
+            let list = panel.querySelector('.zh-comments-list');
+            if (!list) {
+                list = document.createElement('div');
+                list.className = 'zh-comments-list';
+                body.appendChild(list);
+            }
+
+            const items = Array.isArray(data?.data) ? data.data : [];
+            if (!items.length && !list.childElementCount) {
+                body.innerHTML = '<div class="zh-comments-empty">暂无评论</div>';
+                return;
+            }
+            items.forEach(comment => list.appendChild(renderZhihuCommentItem(comment)));
+
+            const paging = data?.paging || {};
+            if (paging.next && !paging.is_end) {
+                const moreBtn = document.createElement('button');
+                moreBtn.className = 'zh-comments-more-btn';
+                moreBtn.textContent = '加载更多评论';
+                moreBtn.addEventListener('click', async () => {
+                    moreBtn.disabled = true;
+                    moreBtn.textContent = '正在加载...';
+                    await loadInlineComments(panel, record, paging.next);
+                });
+                body.appendChild(moreBtn);
+            }
+        } catch (err) {
+            panel.querySelector('.zh-comments-loading')?.remove();
+            panel.querySelector('.zh-comments-more-btn')?.remove();
+            let errEl = panel.querySelector('.zh-comments-error');
+            if (!errEl) {
+                errEl = document.createElement('div');
+                errEl.className = 'zh-comments-error';
+                body.appendChild(errEl);
+            }
+            errEl.textContent = `评论加载失败：${(err.message || err).slice(0, 60)}`;
+        }
+    }
+
+    function toggleInlineComments(bar, record) {
+        const existing = bar.nextElementSibling;
+        if (existing?.classList?.contains('zh-inline-comments')) {
+            existing.remove();
+            bar.querySelector('[data-action="comment"]')?.classList.remove('is-active');
+            return;
+        }
+        // 没有 API id 的记录退回原行为：新标签页打开原文。
+        if (!record.apiTargetId) {
+            if (record.url) window.open(record.url, '_blank', 'noopener');
+            return;
+        }
+
+        const commentCount = Number(record.comment_count) || 0;
+        const panel = document.createElement('div');
+        panel.className = 'zh-inline-comments';
+        panel.innerHTML = `
+            <div class="zh-inline-comments-head">评论${commentCount > 0 ? ` ${commentCount} 条` : ''}</div>
+            <div class="zh-inline-comments-body">
+                <div class="zh-comments-loading"><span class="zh-spinner"></span>正在加载评论...</div>
+            </div>
+        `;
+        bar.insertAdjacentElement('afterend', panel);
+        bar.querySelector('[data-action="comment"]')?.classList.add('is-active');
+        loadInlineComments(panel, record);
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
 
